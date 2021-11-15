@@ -23,12 +23,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.AlignmentLine
-import androidx.compose.ui.layout.FirstBaseline
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.unit.Dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
+import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.atLeast
 import coil.compose.rememberImagePainter
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -113,21 +113,22 @@ val topics = listOf(
 
 @Composable
 fun BodyContent(modifier: Modifier = Modifier) {
-//    MyOwnColumn(modifier.padding(8.dp)) {
-//        Text("MyOwnColumn")
-//        Text("places items")
-//        Text("vertically.")
-//        Text("We've done it by hand!")
-//    }
+/*
+    MyOwnColumn(modifier.padding(8.dp)) {
+        Text("MyOwnColumn")
+        Text("places items")
+        Text("vertically.")
+        Text("We've done it by hand!")
+    }
 
-//    Row(modifier = modifier.horizontalScroll(rememberScrollState())) {
-//        StaggeredGrid(modifier = modifier, rows = 5) {
-//            for (topic in topics) {
-//                Chip(modifier = Modifier.padding(8.dp), text = topic)
-//            }
-//        }
-//    }
-
+    Row(modifier = modifier.horizontalScroll(rememberScrollState())) {
+        StaggeredGrid(modifier = modifier, rows = 5) {
+            for (topic in topics) {
+                Chip(modifier = Modifier.padding(8.dp), text = topic)
+            }
+        }
+    }
+*/
     Row(modifier = modifier
         .background(color = Color.LightGray)
         .padding(16.dp)
@@ -349,8 +350,17 @@ fun LayoutsCodelab() {
 @Composable
 fun ConstraintLayoutContent() {
     ConstraintLayout {
+    val text = createRef()
 
-        val(button1, button2, text) = createRefs()
+    val guideline = createGuidelineFromStart(fraction = 0.5f)
+        Text(
+            "this is a  very very very very very very very very long text",
+            Modifier.constrainAs(text) {
+                linkTo(start = guideline, end = parent.end)
+                width = Dimension.preferredWrapContent.atLeast(100.dp)
+            }
+        )
+/*        val(button1, button2, text) = createRefs()
 
         Button(
             onClick = { /*Do something*/ },
@@ -376,10 +386,72 @@ fun ConstraintLayoutContent() {
         ) {
             Text("Button 2")
         }
+*/
+    }
+}
+
+@Composable
+fun DecoupledConstraintLayout() {
+    BoxWithConstraints {
+        val constraints = if (maxWidth < maxHeight) {
+            decoupledConstraints(margin = 16.dp)
+        } else {
+            decoupledConstraints(margin = 32.dp)
+        }
+
+        ConstraintLayout(constraints) {
+            Button(
+                onClick = { /*TODO*/ },
+                modifier = Modifier.layoutId("button")
+            ) {
+                Text("Button")
+            }
+            Text("Text", Modifier.layoutId("text"))
+        }
+    }
+}
+
+private fun decoupledConstraints(margin: Dp): ConstraintSet {
+    return ConstraintSet {
+        val button = createRefFor("button")
+        val text = createRefFor("text")
+
+        constrain(button) {
+            top.linkTo(parent.top, margin = margin)
+        }
+        constrain(text) {
+            top.linkTo(button.bottom, margin)
+        }
 
     }
 }
 
+@Composable
+fun TwoTexts(modifier: Modifier = Modifier, text1: String, text2: String) {
+    Row(modifier = modifier.height(IntrinsicSize.Min)) {
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 4.dp)
+                .wrapContentWidth(Alignment.Start),
+            text = text1
+        )
+
+        Divider(color = Color.Black, modifier = Modifier
+            .fillMaxHeight()
+            .width(1.dp))
+
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 4.dp)
+                .wrapContentWidth(Alignment.End),
+            text = text2
+        )
+    }
+}
+
+/*
 @Preview
 @Composable
 fun ChipPreview() {
@@ -387,7 +459,9 @@ fun ChipPreview() {
         Chip(text = "Hi there")
     }
 }
+*/
 
+/*
 @Preview
 @Composable
 fun PhotographerCardPreview() {
@@ -395,7 +469,9 @@ fun PhotographerCardPreview() {
         PhotofrapherCatd()
     }
 }
+*/
 
+/*
 @Preview
 @Composable
 fun LayoutsCodelabPreview() {
@@ -406,7 +482,9 @@ fun LayoutsCodelabPreview() {
         LayoutCodelab()
     }
 }
+*/
 
+/*
 @Preview
 @Composable
 fun TextWithPaddingToBaselinePreview() {
@@ -414,7 +492,9 @@ fun TextWithPaddingToBaselinePreview() {
         Text("Hi there!", Modifier1.firstBaselineToTop(32.dp))
     }
 }
+*/
 
+/*
 @Preview
 @Composable
 fun TextWithNormalPaddingPreview() {
@@ -422,7 +502,9 @@ fun TextWithNormalPaddingPreview() {
         Text("Hi there!", Modifier1.padding(top = 32.dp))
     }
 }
+*/
 
+/*
 @Preview
 @Composable
 fun ConstraintLayoutContentPreview() {
@@ -430,10 +512,34 @@ fun ConstraintLayoutContentPreview() {
         ConstraintLayoutContent()
     }
 }
-//@Preview(showBackground = true)
-//@Composable
-//fun DefaultPreview() {
-//    MyApplicationTheme {
-//        Greeting("Android")
-//    }
-//}
+*/
+
+/*
+@Preview
+@Composable
+fun DecoupledConstraintLayoutPrevier() {
+    MyApplicationTheme() {
+        DecoupledConstraintLayout()
+    }
+}
+*/
+
+@Preview
+@Composable
+fun TwoTextsPreview() {
+    MyApplicationTheme {
+        Surface {
+            TwoTexts(text1 = "Hi", text2 = "there")
+        }
+    }
+}
+
+/*
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    MyApplicationTheme {
+        Greeting("Android")
+    }
+}
+*/
