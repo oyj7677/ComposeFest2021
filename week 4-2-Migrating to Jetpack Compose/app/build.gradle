@@ -94,6 +94,8 @@ dependencies {
 
     implementation "com.google.android.material:compose-theme-adapter:$rootProject.materialComposeAdapterVersion"
 
+    implementation "com.google.android.material:compose-theme-adapter:$rootProject.composeVersion"
+
     // Testing dependencies
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$rootProject.espressoVersion"
@@ -105,4 +107,6 @@ dependencies {
     androidTestImplementation "com.google.truth:truth:$rootProject.truthVersion"
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$rootProject.composeVersion"
     testImplementation "junit:junit:$rootProject.junitVersion"
+
+
 }
